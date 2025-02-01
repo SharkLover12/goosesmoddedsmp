@@ -1,38 +1,18 @@
-local internet = require("internet")
-local json = require("json") -- Ensure you have a JSON library available, or parse manually if necessary.
+local camera = peripheral.wrap("right")
+local array = " .,-=+xX#"
+local monitor = peripheral.wrap("monitor_0")
+local yp = 1
+monitor.clear()
+monitor.setTextScale(0.5)
+monitor.setCursorPos(1,1)
 
--- Replace <your-api-key-here> with your actual Groq API key
-local api_key = "<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>"
-local api_url = "https://api.groq.com/v1/chat/completion"
-
--- Ask the user for a custom prompt
-print("Enter your prompt: ")
-local user_prompt = io.read()
-
--- Construct the request body using the user's prompt
-local request_body = {
-    messages = {
-        {
-            role = "user",
-            content = user_prompt
-        }
-    },
-    model = "mixtral-8x7b-32768" -- Or another model as needed
-}
-
--- Convert Lua table to JSON string
-local json_body = json.encode(request_body)
-
--- Create a request to the Groq API with the authorization header
-local headers = {
-    ["Authorization"] = "Bearer " .. api_key,
-    ["Content-Type"] = "application/json"
-}
-
--- Send POST request
-local response = internet.request(api_url, json_body, headers)
-
--- Read the response and print the chat completion result
-for line in response do
-    print(line)
+for j = -0.35,0.25,0.025 do
+  for i = -1,1,0.036 do
+    local d = camera.distance(i, 0-j)
+    local a = 1
+    if d > 0 then a = 2 + (8 - math.min(8, (d/1.2))) end
+    monitor.write(string.sub(array, a, a))
+  end
+  yp=yp+1
+  monitor.setCursorPos(1,yp)
 end
